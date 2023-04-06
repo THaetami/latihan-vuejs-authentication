@@ -63,18 +63,20 @@
         </div>
 
         <div class="px-4 sl:px-6 lg:px-10 mb-0 mt-1 text-center box-content pointer ">
-            <h3 class="font-bold text-gray-600 text-center text-xl mb-2">{{ message }}</h3>
+            <h3 class="font-bold text-gray-600 text-center text-xl mb-2">Selamat Datang</h3>
             <div class="mx-auto whitespace-pre-wrap break-words pb-2 rounded md:rounded-none">
                 {{ user.fullname }}
             </div>
         </div>
-
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
     name: 'HomePage',
-    props: ['user']
+    computed: {
+        ...mapGetters(['user'])
+    }
 }
 </script>
