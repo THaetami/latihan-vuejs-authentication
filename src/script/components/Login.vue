@@ -8,27 +8,23 @@
             <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">start your 14-day free trial</a>
           </p>
         </div>
-        <form class="mt-8 space-y-6" action="#" method="POST">
+        <form @submit.prevent="handleSubmit">
           <input type="hidden" name="remember" value="true">
           <div class="-space-y-px rounded-md shadow-sm">
             <div>
-              <label for="email-address" class="sr-only">Email address</label>
-              <input id="email-address" name="email" type="email" autocomplete="email" required class="p-2 relative block w-full rounded-t-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Email address">
+              <label for="username" class="sr-only">Username</label>
+              <input v-model="username" name="username" type="text" autocomplete="username" required class="p-2 relative block w-full rounded-t-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Username">
             </div>
             <div>
               <label for="password" class="sr-only">Password</label>
-              <input id="password" name="password" type="password" autocomplete="current-password" required class="p-2 relative block w-full rounded-b-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Password">
+              <input v-model="password" name="password" type="password" autocomplete="current-password" required class="p-2 relative block w-full rounded-b-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Password">
             </div>
           </div>
 
           <div class="flex items-center justify-between">
             <div class="flex items-center">
               <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
-              <label for="remember-me" class="ml-2 block text-sm text-gray-900">Remember me</label>
-            </div>
-
-            <div class="text-sm">
-              <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Forgot your password?</a>
+              <label for="remember-me" class="ml-2 block text-sm text-gray-900">Show/Hide</label>
             </div>
           </div>
 
@@ -48,7 +44,25 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
-    name: 'LoginPage'
+    name: 'LoginPage',
+    data() {
+      return {
+        fullname: '',
+        username: '',
+        password: '',
+      }
+    },
+    methods: {
+        async handleSubmit() {
+          const response = await axios.post('authentications', {
+            username: this.username,
+            password: this.password,
+          });
+          console.log(response)
+          this.$router.push('/')
+        }
+    }
 }
 </script>
