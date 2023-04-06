@@ -1,5 +1,5 @@
 # vue-project
-back-end => https://github.com/THaetami/auth-api
+back-end => https://github.com/THaetami/open-api-music
 
 ## Customize configuration
 

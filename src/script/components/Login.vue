@@ -55,14 +55,14 @@ export default {
       }
     },
     methods: {
-        async handleSubmit() {
-          const response = await axios.post('authentications', {
-            username: this.username,
-            password: this.password,
-          });
-          console.log(response)
-          this.$router.push('/')
-        }
+      async handleSubmit() {
+        const response = await axios.post('authentications', {
+          username: this.username,
+          password: this.password,
+        });
+        localStorage.setItem('token', response.data.data.accessToken)
+        this.$router.push('/')
+      }
     }
 }
 </script>
