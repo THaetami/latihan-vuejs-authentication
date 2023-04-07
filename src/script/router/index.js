@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '../components/Home.vue'
 import LoginPage from '../components/Login.vue'
 import RegisterPage from '../components/Register.vue'
+import PlaylistsPage from '../components/PlaylistsPage.vue'
 
 const guest = (to, from, next) => {
   if (!localStorage.getItem("token")) {
@@ -38,6 +39,12 @@ const router = createRouter({
       name: 'LoginPage',
       component: LoginPage,
       beforeEnter: guest
+    },
+    {
+      path: '/playlists',
+      name: 'PlaylistsPage',
+      component: PlaylistsPage,
+      beforeEnter: auth
     }
   ]
 })

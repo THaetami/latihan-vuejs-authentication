@@ -7,7 +7,7 @@
 }
 
 body {
-    background: #167bff;
+    background: white;
     min-height: 100vh;
     display: flex;
     font-weight: 400;
@@ -99,4 +99,31 @@ body, html, #app, #root, .auth-wrapper {
 .aktip {
     color: red;
     border-color: red;
+}
+
+
+ 
+.kertas:before,
+.kertas:after {
+  content: "";
+  height: 98%;
+  position: absolute;
+  width: 100%;
+  z-index: -1;
+}
+ 
+.kertas:before {
+  background: #fafafa;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  left: -5px;
+  top: 4px;
+  transform: rotate(-2.5deg);
+}
+ 
+.kertas:after {
+  background: #f6f6f6;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  right: -3px;
+  top: 1px;
+  transform: rotate(1.4deg);
 }
