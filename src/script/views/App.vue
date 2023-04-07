@@ -20,7 +20,7 @@ export default {
   computed: {
     ...mapGetters(['user'])
   },
-  mounted() {
+  created() {
     this.getUser()
   },
   methods: {

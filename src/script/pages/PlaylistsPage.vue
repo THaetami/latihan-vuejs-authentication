@@ -100,9 +100,6 @@ export default {
 
             this.playlists = response.data.data.playlists.reverse()
         },
-        bukaModal() {
-            this.showModal1 = true
-        },
         async postPlaylist() {
             await axios.post('playlists', {
                 name: this.name
