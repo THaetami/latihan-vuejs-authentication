@@ -10,7 +10,7 @@
 
 <script>
 import axios from 'axios';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import NavBar from '../components/Nav.vue'
 export default {
   name: 'App',
@@ -18,9 +18,9 @@ export default {
     NavBar
   },
   computed: {
-    ...mapActions(['getuser'])
+    ...mapGetters(['user'])
   },
-      mounted() {
+  mounted() {
     this.getUser()
   },
   methods: {

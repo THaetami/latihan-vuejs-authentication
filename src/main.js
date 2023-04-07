@@ -7,7 +7,6 @@ import router from './script/router'
 import store from './script/views/Vuex'
 import App from './script/views/App.vue'
 import './styles/buttonTriger'
-import Notifications from '@kyvg/vue3-notification'
 
 
-createApp(App).use(store).use(router).use(Notifications).mount('#app')
+createApp(App).use(store).use(router).mount('#app')

@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomePage from '../components/Home.vue'
-import LoginPage from '../components/Login.vue'
-import RegisterPage from '../components/Register.vue'
-import PlaylistsPage from '../components/PlaylistsPage.vue'
+import HomePage from '../pages/Home.vue'
+import LoginPage from '../pages/Login.vue'
+import RegisterPage from '../pages/Register.vue'
+import PlaylistsPage from '../pages/PlaylistsPage.vue'
 
 const guest = (to, from, next) => {
   if (!localStorage.getItem("token")) {
