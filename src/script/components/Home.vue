@@ -72,11 +72,26 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import axios from 'axios';
+import { mapGetters, mapActions } from 'vuex';
 export default {
     name: 'HomePage',
     computed: {
         ...mapGetters(['user'])
+    },
+    mounted() {
+        this.getUser()
+    },
+    methods: {
+        ...mapActions(["getuser"]),
+        async getUser() {
+            const response = await axios.get('users', {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            this.getuser(response.data.data.user)
+        }
     }
 }
 </script>

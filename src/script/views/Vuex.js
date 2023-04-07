@@ -8,21 +8,21 @@ const store = createStore({
     state,
     getters: {
         user: (state) => {
+            console.log(state)
             return state.user;
         }
     },
     actions: {
-        user(context, user) {
-            context.commit('user', user);
-        }
+        getuser({commit}, user) {
+            commit("user", user);
+        },
     },
     mutations: {
-        user(state, user) {
-            state.user = user;
+        user(state, getuser) {
+            state.user = getuser;
         }
     }
 });
 
-// app.use(store)
 
 export default store;

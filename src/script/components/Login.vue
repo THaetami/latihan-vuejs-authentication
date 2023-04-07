@@ -61,8 +61,9 @@ export default {
           password: this.password,
         });
         localStorage.setItem('token', response.data.data.accessToken)
-        this.$router.push('/')        
-      }
+        localStorage.setItem('tokenRefresh', response.data.data.refreshToken)
+        this.$router.push({ name: 'HomePage' })
+      },
     }
 }
 </script>

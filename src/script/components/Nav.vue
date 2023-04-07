@@ -31,18 +31,25 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { mapGetters } from 'vuex';
 export default {
   name: 'NavBar',
   methods: {
-    handleClick() {
+    async handleClick() {
+      await axios.delete('/authentications', {
+        data: {
+          refreshToken: localStorage.getItem('tokenRefresh')
+        }
+      })
+      this.$store.dispatch('getuser', null)
       localStorage.removeItem('token')
-      this.$store.dispatch('user', null)
-      this.$router.push('/')
+      localStorage.removeItem('tokenRefresh')
+      this.$router.push({ name: 'HomePage' })
     }
   },
   computed: {
     ...mapGetters(['user'])
-  }
+  },
 }
 </script>

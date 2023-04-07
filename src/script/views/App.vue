@@ -9,17 +9,17 @@
 </template>
 
 <script>
-import axios from 'axios';
+// import axios from 'axios';
+import { mapActions } from 'vuex';
 import NavBar from '../components/Nav.vue'
 export default {
   name: 'App',
   components: {
     NavBar
   },
-  async mounted() {
-    const response = await axios.get('users');
-      this.$store.dispatch('user', response.data.data.user)
-  }
+  computed: {
+    ...mapActions(['getuser'])
+  },
 }
 </script>
 
