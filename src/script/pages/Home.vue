@@ -13,11 +13,6 @@
 import { mapGetters } from 'vuex';
 export default {
     name: 'HomePage',
-      data() {
-        return {
-            timer: ''
-        }
-    },
     computed: {
         ...mapGetters(['user'])
     },

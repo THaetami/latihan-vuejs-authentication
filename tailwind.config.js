@@ -9,6 +9,6 @@ export const theme = {
 };
 export const plugins = [
   // eslint-disable-next-line no-undef
-  // require('flowbite/plugin')
+  require("daisyui")
 ];
 

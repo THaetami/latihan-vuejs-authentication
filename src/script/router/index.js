@@ -3,6 +3,8 @@ import HomePage from '../pages/Home.vue'
 import LoginPage from '../pages/Login.vue'
 import RegisterPage from '../pages/Register.vue'
 import PlaylistsPage from '../pages/PlaylistsPage.vue'
+import NotFound from '../components/NotFound.vue'
+// import Playlists from '../components/Playlist.vue'
 
 const guest = (to, from, next) => {
   if (!localStorage.getItem("token")) {
@@ -23,6 +25,12 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   linkExactActiveClass: 'aktip',
   routes: [
+    {
+        path: '/:pathMatch(.*)*',
+        name: NotFound,
+        component: NotFound,
+        // redirect: '/'
+    },
     {
       path: '/',
       name: 'HomePage',
@@ -45,7 +53,23 @@ const router = createRouter({
       name: 'PlaylistsPage',
       component: PlaylistsPage,
       beforeEnter: auth
-    }
+    },
+    // {
+    //   path: '/playlists',
+    //   component: PlaylistsPage,
+    //   children: [
+    //     {
+    //       path: '/playlists', 
+    //       name: 'PlaylistComponent',
+    //       component: Playlists,
+    //     },
+    //     // {
+    //     //   path: '/playlists/:id',
+    //     //   component: UserPosts,
+    //     // },
+    //   ],
+    //   beforeEnter: auth
+    // },
   ]
 })
 
