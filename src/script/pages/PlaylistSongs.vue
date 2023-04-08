@@ -8,6 +8,25 @@
             <button class="justify-end p-3 pt-0 pb-0 rounded-md bg-red-500 hover:bg-red-800" style="font-weight: bold;" @click="deleteSong">Hapus</button>
         </template>
     </modal-component>
+    <modal-component v-if="$route.name === 'PlaylistSongs'" :show="showModalPlaylistSongs" @close="showModalPlaylistSongs = false" :getPlaylist="getPlaylists">
+        <template #body>
+            <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Add Song to Playlist</h3>
+            <div class="space-y-6" >
+                <div>
+                    <label for="song" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Search song</label>
+                    <input type="search" ref="search" name="song" v-model="nameSong" @keyup.enter="getSongs()"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Search song" required>
+                    <form @submit.prevent="postPlaylistSong" class="overflow-auto">
+                        <label for="countries_multiple" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-2">Select song</label>
+                        <select @change="getSongId($event.target.value)" class="bg-gray-50 border p-2 overflow-auto border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option v-for="songList in songLists" v-bind:key="songList.id" :value="songList.id">{{ songList.title }}</option>
+                        </select>
+                        <button type="submit" class="mt-3 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add Song</button>
+                    </form>
+                </div>
+            </div>
+        </template>
+    </modal-component>
+    <aside-component @showModalAddSongPlaylist="showModalAddSongPlaylist"></aside-component>
     <div class="p-0 xl:ml-80">
             <div class="bg-white w-full">
             <div class="text-start mt-10 m-5 flex items-center space-x-4">
@@ -73,11 +92,13 @@
 <script>
 import axios from 'axios'
 import ModalComponent from '../components/ModalComponent.vue'
+import AsideComponent from '../components/AsideComponent.vue';
 export default {
     name: 'PlaylistSongs',
     params: ['playlistId'],
     components: {
-        ModalComponent
+        ModalComponent,
+        AsideComponent
     },
     data() {
         return {
@@ -85,6 +106,10 @@ export default {
             songs: '',
             showModal: false,
             songId: '',
+            showModalPlaylistSongs: false,
+            nameSong: '',
+            songLists: '',
+            idForAddSong: '',
         }
     },
     mounted() {
@@ -108,6 +133,31 @@ export default {
             console.log(response)
             this.showModal = false
             this.getSongsInPlaylist()
+        },
+        async getSongs() {
+            const response = await axios.get('songs', {
+                params: {
+                    title: this.nameSong,
+                }
+            })
+            this.songLists = response.data.data.songs
+        },
+        getSongId(e) {
+            console.log(e)
+            this.idForAddSong = e
+        },
+        async postPlaylistSong() {
+            const response = await axios.post(`playlists/${this.$route.params.playlistId}/songs`, {
+                songId: this.idForAddSong
+            })
+            let element = this.$refs["search"];
+            element.value = ''
+            console.log(response)
+            this.showModalPlaylistSongs = false
+            this.getSongsInPlaylist()
+        },
+        showModalAddSongPlaylist() {
+            this.showModalPlaylistSongs = true
         }
     }   
 }
