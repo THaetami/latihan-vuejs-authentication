@@ -34,7 +34,6 @@ body, html, #app, #root, .auth-wrapper {
 }
 
 .auth-wrapper {
-    display: flex;
     justify-content: center;
     flex-direction: column;
     text-align: left;

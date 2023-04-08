@@ -1,11 +1,7 @@
 <template>
     <NavBar />
 
-    <!-- <div class="auth-wrapper"> -->
-      <!-- <div class="auth-inner"> -->
-        <RouterView />
-      <!-- </div> -->
-    <!-- </div> -->
+    <RouterView />
 </template>
 
 <script>

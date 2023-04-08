@@ -2,7 +2,7 @@ import { createStore } from 'vuex'
 
 const state = {
     user: null,
-    playlists: null
+    songInPlaylist: null
 };
 
 const store = createStore({
@@ -12,24 +12,24 @@ const store = createStore({
             console.log(state)
             return state.user;
         },
-        playlists: (state) => {
-            return state.playlists
+        songInPlaylist: (state) => {
+            return state.songInPlaylist
         }
     },
     actions: {
         getuser({commit}, user) {
             commit("user", user);
         },
-        getplaylists({commit}, playlists) {
-            commit("playlists", playlists)
+        getsongInPlaylist({commit}, songInPlaylist) {
+            commit("songInPlaylist", songInPlaylist)
         }
     },
     mutations: {
         user(state, getuser) {
             state.user = getuser;
         },
-        playlists(state, getplaylists) {
-            state.playlists = getplaylists
+        songInPlaylist(state, getsongInPlaylist) {
+            state.songInPlaylist = getsongInPlaylist
         }
     }
 });
