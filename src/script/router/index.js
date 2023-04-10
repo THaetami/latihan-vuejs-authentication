@@ -5,6 +5,7 @@ import RegisterPage from '../pages/Register.vue'
 import PlaylistsPage from '../pages/PlaylistsPage.vue'
 import NotFound from '../components/NotFound.vue'
 import PlaylistSongs from '../pages/PlaylistSongs.vue'
+import SongPage from '../pages/SongPage.vue'
 
 const guest = (to, from, next) => {
   if (!localStorage.getItem("token")) {
@@ -59,6 +60,11 @@ const router = createRouter({
           component: PlaylistSongs,
         }
       ]
+    },
+    {
+      path: '/songs/:songId',
+      name: 'SongPage',
+      component: SongPage,
     }
   ]
 })

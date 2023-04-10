@@ -1,5 +1,5 @@
 <template>
-<div class="min-h-screen mt-[8rem] bg-white">
+<div class="min-h-screen mt-[6rem] bg-white">
     <modal-component :show="showModal1" @close="showModal1 = false" :getPlaylist="getPlaylists">
         <template #body>
             <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Add Your Playlists</h3>
@@ -29,7 +29,15 @@
         </template>
     </aside-component>
     <div v-if="this.$route.name === 'PlaylistsPage'" class="p-4 xl:ml-80">
-        <div class="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
+        <div class="justify-start flex fixed">
+        <button @click="showModal1 = true" class="hidden sm:inline-block xl:hidden mb-3 font-sans font-bold transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-2 rounded-lg bg-gradient-to-tr from-blue-600 to-blue-400 text-white shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85] w-30 items-center gap-4 px-4 capitalize" type="button">
+            <p class="block antialiased font-sans text-base leading-relaxed text-inherit font-medium capitalize">Add Song</p>
+        </button>
+        </div>
+        <button @click="showModal1 = true" aria-label="add song" class="like inline-block sm:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256C397.4 512 512 397.4 512 256S397.4 0 256 0zM352 280H280V352c0 13.2-10.8 24-23.1 24C242.8 376 232 365.2 232 352V280H160C146.8 280 136 269.2 136 256c0-13.2 10.8-24 24-24H232V160c0-13.2 10.8-24 24-24C269.2 136 280 146.8 280 160v72h72C365.2 232 376 242.8 376 256C376 269.2 365.2 280 352 280z"/></svg>
+        </button>
+        <div class="mb-12 mt-16 md:mt-6 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
             <div v-for="playlist in playlists" v-bind:key="playlist.id" class=" flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
                 <div class="flex items-center space-x-4">
                     <div class="flex-shrink-0">

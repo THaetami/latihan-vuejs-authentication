@@ -35,7 +35,7 @@
     
         <div class="h-[300px] overflow-auto">
           <div v-for="song in songs" v-bind:key="song.id" class="flex text-black hover:text-white border-b border-gray-800 hover:bg-gray-800">
-            <div class="p-3 w-full">{{ song.title }}</div>
+            <router-link :to="{ name: 'SongPage', params: { songId: song.id } }" class="p-3 w-full hover:underline cursor-pointer">{{ song.title }}</router-link>
             <div class="p-3 w-full">{{ song.performer }}</div>
             <div class="p-3 w-full">Spotify</div>
           </div>

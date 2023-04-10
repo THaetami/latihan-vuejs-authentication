@@ -37,32 +37,28 @@ body, html, #app, #root, .auth-wrapper {
     justify-content: center;
     flex-direction: column;
     text-align: left;
-      position: fixed;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  display: table;
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    display: table;
 }
 
-
-
 .auth-inner {
-   
     margin: auto;
     box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
     transition: all .3s;
-    
     display: table-cell;
-  vertical-align: middle;
+    vertical-align: middle;
 }
 
 .modal-container {
-  margin: 0px auto;
-  background-color: rgba(255, 255, 255, 1.00);
-  border-radius: 16px;
-  transition: all 0.3s ease;
-   width: 400px;
-   border-radius: 15px;
+    margin: 0px auto;
+    background-color: rgba(255, 255, 255, 1.00);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    width: 400px;
+    border-radius: 15px;
 }
 
 .auth-wrapper .form-control:focus {
@@ -107,8 +103,9 @@ body, html, #app, #root, .auth-wrapper {
         background: white;
     }
     .modal-container {
-   width: 100%;
-}
+        width: 100%;
+        border-radius: 0px;
+    }
 }
 
 .aktip {
