@@ -9,7 +9,7 @@
           </p>
         </div>
         <form @submit.prevent="handleSubmit">
-          <input type="hidden" name="remember" value="true">
+          <span v-if="message" class="text-red-500 mb-4">{{ message }}</span>
           <div class="-space-y-px rounded-md shadow-sm">
             <div>
               <label for="username" class="sr-only">Username</label>
@@ -17,14 +17,14 @@
             </div>
             <div>
               <label for="password" class="sr-only">Password</label>
-              <input v-model="password" name="password" type="password" autocomplete="current-password" required class="p-2 relative block w-full rounded-b-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Password">
+              <input v-model="password" name="password" :type="passwordFieldType" autocomplete="current-password" required class="p-2 relative block w-full rounded-b-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Password">
             </div>
           </div>
 
           <div class="flex items-center justify-between mt-3 mb-3">
             <div class="flex items-center">
-              <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
-              <label for="remember-me" class="ml-2 block text-sm text-gray-900">Show/Hide</label>
+              <input v-model="showPassword" id="show-hide" name="show-hide" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+              <label for="show-hide" class="ml-2 block text-sm text-gray-900">Show/Hide</label>
             </div>
           </div>
 
@@ -47,22 +47,44 @@ export default {
     name: 'LoginPage',
     data() {
       return {
-        fullname: '',
         username: '',
         password: '',
+        showPassword: false,
+        message: ''
       }
+    },
+    computed: {
+      passwordFieldType() {
+        return this.showPassword ? 'text' : 'password';
+      },
     },
     methods: {
       async handleSubmit() {
-        const response = await axios.post('authentications', {
-          username: this.username,
-          password: this.password,
-        });
-        localStorage.setItem('token', response.data.data.accessToken)
-        localStorage.setItem('tokenRefresh', response.data.data.refreshToken)
-        this.$router.push({ name: 'HomePage' })
-        this.$router.go()
-      },
+        try {
+          const { data } = await axios.post('authentications', {
+            username: this.username,
+            password: this.password,
+          });
+          const { accessToken, refreshToken } = data.data;
+          this.username = '';
+          this.password = '';
+          localStorage.setItem('token', accessToken);
+          localStorage.setItem('tokenRefresh', refreshToken);
+          this.$router.push({ name: 'HomePage' });
+          this.$router.go();
+        } catch (error) {
+          const { response, request } = error;
+          if (response) {
+            const { message } = response.data;
+            console.log(message);
+            this.message = message;
+          } else if (request) {
+            console.log(request);
+          } else {
+            console.log('Error', error.message);
+          }
+        }
+      }
     }
 }
 </script>

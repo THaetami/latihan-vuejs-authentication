@@ -1,12 +1,13 @@
 <template>
-<div class="min-h-screen mt-[6rem] bg-white">
+<div class="min-h-screen mt-[5rem] bg-white">
     <modal-component :show="showModal1" @close="showModal1 = false" :getPlaylist="getPlaylists">
         <template #body>
             <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Add Your Playlists</h3>
             <form @submit.prevent="postPlaylist" class="space-y-6" >
                 <div>
                     <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Playlists Name</label>
-                    <input type="text" name="email" v-model="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="playlists name" required>
+                    <input type="text" name="email" v-model.trim="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="playlists name" required>
+                    <small v-if="message" class="text-red-500">{{ message }}</small>
                 </div>
 
                 <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add playlists</button>
@@ -37,8 +38,8 @@
         <button @click="showModal1 = true" aria-label="add song" class="like inline-block sm:hidden">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256C397.4 512 512 397.4 512 256S397.4 0 256 0zM352 280H280V352c0 13.2-10.8 24-23.1 24C242.8 376 232 365.2 232 352V280H160C146.8 280 136 269.2 136 256c0-13.2 10.8-24 24-24H232V160c0-13.2 10.8-24 24-24C269.2 136 280 146.8 280 160v72h72C365.2 232 376 242.8 376 256C376 269.2 365.2 280 352 280z"/></svg>
         </button>
-        <div class="mb-12 mt-16 md:mt-6 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
-            <div v-for="playlist in playlists" v-bind:key="playlist.id" class=" flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
+        <div class="mb-12 mt-16 md:mt-10 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
+            <div v-for="playlist in playlists" v-bind:key="playlist.id" class=" flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-lg">
                 <div class="flex items-center space-x-4">
                     <div class="flex-shrink-0">
                             <div class="dropdown dropdown-start">
@@ -95,6 +96,7 @@ export default {
             playlists: '',
             showModal1: false,
             name: '',
+            message: ''
         }
     },
     computed: {
@@ -112,26 +114,56 @@ export default {
     },
     methods: {
         async getPlaylists() {
-            const response = await axios.get('playlists', {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            this.playlists = response.data.data.playlists
+            try {
+                const response = await axios.get('playlists', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                this.playlists = response.data.data.playlists
+
+            } catch (error) {
+                this.handleAxiosError(error)
+            }
         },
         async postPlaylist() {
-            await axios.post('playlists', {
-                name: this.name
-            });
-            this.name = ''
-            this.getPlaylists()
-            this.showModal1 = false
+            try {
+                await axios.post('playlists', {
+                    name: this.name
+                });
+                this.name = ''
+                this.getPlaylists()
+                this.showModal1 = false
+            } catch (error) {
+                this.handleAxiosError(error)
+            }
+            
         },
         async deletePlaylist(id) {
-            const response = await axios.delete(`playlists/${id}`)
-            this.getPlaylists()
-            console.log(response)
+            try {  
+                await axios.delete(`playlists/${id}`)
+                this.getPlaylists()
+            } catch (error) {
+                this.handleAxiosError(error)
+            }
         },
+        handleAxiosError(error) {
+            const { response, request } = error;
+            if (response) {
+                if (response.data.statusCode === 401) {
+                    localStorage.removeItem('token')
+                    localStorage.removeItem('tokenRefresh')
+                    this.$store.dispatch('getuser', null)
+                    this.$router.push({ name: 'LoginPage' });
+                }
+                const { message } = response.data;
+                this.message = message;
+            } else if (request) {
+                console.log(request);
+            } else {
+                console.log('Error', error.message);
+            }
+        }
     }
 }
 </script>

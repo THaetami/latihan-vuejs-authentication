@@ -128,7 +128,7 @@ export default {
         },
         async postSong() {
             const response = await axios.post('songs', {
-                title: this.title,
+                title: this.title.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
                 year: this.year,
                 performer: this.performer,
                 genre: this.genre,

@@ -6,13 +6,22 @@
                 <div class="space-y-6" >
                     <div>
                         <label for="song" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Search song</label>
-                        <input type="search" ref="search" name="song" v-model="nameSong" @keyup.enter="getSongs()"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Search song" required>
-                        <form @submit.prevent="postPlaylistSong" class="overflow-auto">
+                        <div class="group flex items-center justify-between gap-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
+                            <i>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="h-5 w-5 text-light-secondary transition-colors group-focus-within:text-main-accent dark:text-dark-secondary">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path>
+                                </svg>
+                            </i> 
+                            <input type="search" placeholder="Cari Judul Lagu" name="song" v-model="nameSong" @keyup.enter="getSongs()" class="peer flex-1 bg-transparent outline-none placeholder:text-light-secondary dark:placeholder:text-dark-secondary"> 
+                        </div>
+                        <form class="overflow-auto">
                             <label for="countries_multiple" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-2">Select song</label>
                             <select @change="getSongId($event.target.value)" class="bg-gray-50 border p-2 overflow-auto border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option disabled>Please select one</option>
                                 <option v-for="songList in songLists" v-bind:key="songList.id" :value="songList.id">{{ songList.title }}</option>
                             </select>
-                            <button type="submit" class="mt-3 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add Song</button>
+                            <small v-if="message" class="text-red-500">{{ message }}</small>
+                            <button @click.prevent="postPlaylistSong" type="submit" class="mt-3 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add Song</button>
                         </form>
                     </div>
                 </div>
@@ -142,7 +151,8 @@ export default {
             showModalPlaylistSongs: false,
             nameSong: '',
             songLists: '',
-            idForAddSong: '',
+            idForAddSong: null,
+            message: ''
         }
     },
     mounted() {
@@ -154,18 +164,26 @@ export default {
             this.songId = id
         },
         async getSongsInPlaylist() {
-            const response = await axios.get(`playlists/${this.$route.params.playlistId}/songs`)
-            this.playlist = response.data.data.playlist
+            try {
+                const response = await axios.get(`playlists/${this.$route.params.playlistId}/songs`)
+                this.playlist = response.data.data.playlist
+            } catch (error) {
+                this.handleAxiosError(error)
+            }
         },
         async deleteSong() {
-            const response = await axios.delete(`playlists/${this.$route.params.playlistId}/songs`, {
-                data: {
-                    songId: this.songId
-                }
-            })
-            console.log(response)
-            this.showModal = false
-            this.getSongsInPlaylist()
+            try {
+                const response = await axios.delete(`playlists/${this.$route.params.playlistId}/songs`, {
+                    data: {
+                        songId: this.songId
+                    }
+                })
+                console.log(response)
+                this.showModal = false
+                this.getSongsInPlaylist()
+            } catch (error) {
+                this.handleAxiosError(error)
+            }
         },
         async getSongs() {
             const response = await axios.get('songs', {
@@ -180,12 +198,37 @@ export default {
             this.idForAddSong = e
         },
         async postPlaylistSong() {
-            const response = await axios.post(`playlists/${this.$route.params.playlistId}/songs`, {
-                songId: this.idForAddSong
-            })
-            console.log(response)
-            this.showModalPlaylistSongs = false
-            this.getSongsInPlaylist()
+                try {
+                    const response = await axios.post(`playlists/${this.$route.params.playlistId}/songs`, {
+                        songId: this.idForAddSong
+                    })
+                    console.log(response)
+                    this.showModalPlaylistSongs = false
+                    this.idForAddSong = null
+                    this.songLists = ''
+                    this.nameSong = ''
+                    this.message = ''
+                    this.getSongsInPlaylist()
+                } catch (error) {
+                    this.handleAxiosError(error)
+                }
+        },
+        handleAxiosError(error) {
+            const { response, request } = error;
+            if (response) {
+                if (response.data.statusCode === 401) {
+                    localStorage.removeItem('token')
+                    localStorage.removeItem('tokenRefresh')
+                    this.$store.dispatch('getuser', null)
+                    this.$router.push({ name: 'LoginPage' });
+                }
+                const { message } = response.data;
+                this.message = (message !== '"songId" must be a string') ? message : 'silahkan cari dan pilih lagu';
+            } else if (request) {
+                console.log(request);
+            } else {
+                console.log('Error', error.message);
+            }
         }
     }   
 }

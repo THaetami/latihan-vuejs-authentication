@@ -22,12 +22,27 @@ export default {
   methods: {
     ...mapActions(["getuser"]),
     async getUser() {
-      const response = await axios.get('users', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+      try {
+        const response = await axios.get('users', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        this.getuser(response.data.data.user)
+      } catch (error) {
+        const { response, request } = error;
+        if (response) {
+          const { message } = response.data;
+          console.log(message);
+          if (response.status === 400) {
+            this.$store.dispatch('getuser', null)
+          }
+        } else if (request) {
+          console.log(request);
+        } else {
+          console.log('Error', error.message);
         }
-      });
-      this.getuser(response.data.data.user)
+      }
     }
   }
 }

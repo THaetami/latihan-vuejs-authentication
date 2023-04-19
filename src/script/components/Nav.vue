@@ -87,15 +87,23 @@ export default {
   name: 'NavBar',
   methods: {
     async handleClick() {
-      await axios.delete('/authentications', {
-        data: {
-          refreshToken: localStorage.getItem('tokenRefresh')
+      try {
+        await axios.delete('/authentications', {
+          data: {
+            refreshToken: localStorage.getItem('tokenRefresh')
+          }
+        })
+        this.$store.dispatch('getuser', null)
+        localStorage.removeItem('token')
+        localStorage.removeItem('tokenRefresh')
+        this.$router.push({ name: 'HomePage' })
+      } catch (error) {
+        console.log(error.response.status)
+        const statusCode = error.response.status;
+        if (statusCode === 400) {
+          this.$store.dispatch('getuser', null)
         }
-      })
-      this.$store.dispatch('getuser', null)
-      localStorage.removeItem('token')
-      localStorage.removeItem('tokenRefresh')
-      this.$router.push({ name: 'LoginPage' })
+      }
     }
   },
   computed: {

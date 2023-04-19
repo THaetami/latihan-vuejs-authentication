@@ -113,8 +113,20 @@ export default {
     },
     methods: {
       async getSongs() {
-        const response = await axios.get('songs')
-        this.songs = response.data.data.songs
+        try {
+          const response = await axios.get('songs')
+          this.songs = response.data.data.songs
+        } catch (error) {
+          const { response, request } = error;
+          if (response) {
+            const { message } = response.data;
+            console.log(message);
+          } else if (request) {
+            console.log(request);
+          } else {
+            console.log('Error', error.message);
+          }
+        }
       }
     }
 }
