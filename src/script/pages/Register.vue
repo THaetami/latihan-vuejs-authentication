@@ -47,7 +47,7 @@
 <script>
 import axios from 'axios'
 export default {
-    name: 'LoginPage',
+    name: 'RegisterPage',
     data() {
         return {
             fullname: '',

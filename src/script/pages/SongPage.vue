@@ -38,9 +38,8 @@
             </form>
         </template>
     </modal-component>
-    <div class="bg-gradient-to-r from-purple-300 to-blue-200">
+    <div v-if="song" class="bg-gradient-to-r from-purple-300 to-blue-200">
         <div class="h-screen bg-gradient-to-r from-purple-300 to-blue-200 pt-20 mt-10">
-
             <div v-if="id" class="flex justify-center p-5 md:p-0">
                 <div class="alert shadow-lg mb-4 w-full p-2 md:w-1/2">
                     <div>
@@ -78,7 +77,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <div class=" z-10 top-0 w-full">
                 <div class="extraOutline p-4 bg-white w-max bg-whtie m-auto rounded-lg">
                     <div class="file_upload p-5 relative border-4 border-dotted border-gray-300 rounded-lg w-full">
@@ -95,14 +94,17 @@
             </div>
         </div>
     </div>
+    <not-found v-else :message="message"></not-found>
 </template>
 <script>
 import axios from 'axios'
 import ModalComponent from '../components/ModalComponent.vue'
+import NotFound from '../components/NotFound.vue'
 export default {
     name: 'SongPage',
     components: {
-        ModalComponent
+        ModalComponent,
+        NotFound
     },
     data() {
         return {
@@ -118,7 +120,8 @@ export default {
             performerErrorMessage: '',
             yearErrorMessage: '',
             genreErrorMessage: '',
-            durationErrorMessage: ''
+            durationErrorMessage: '',
+            message: ''
         }
     },
     watch: {
@@ -133,8 +136,20 @@ export default {
     },
     methods: {
         async getSong() {
-            const response = await axios.get(`songs/${this.$route.params.songId}`)
-            this.song = response.data.data.song
+            try {
+                const response = await axios.get(`songs/${this.$route.params.songId}`)
+                this.song = response.data.data.song
+            } catch (error) {
+                const { response, request } = error;
+                if (response) {
+                    const { message } = response.data;
+                    this.message = message;
+                } else if (request) {
+                    console.log(request);
+                } else {
+                    console.log('Error', error.message);
+                }
+            }
         },
         validateTitle() {
             if (this.title.length < 3) {

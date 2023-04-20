@@ -4,13 +4,9 @@
       <div class="bg-white shadow overflow-hidden sm:rounded-lg pb-8">
         <div class="border-t border-gray-200 text-center pt-8">
           <h1 class="text-9xl font-bold text-purple-400">404</h1>
-          <h1 class="text-6xl font-medium py-8">oops! Page not found</h1>
-          <p class="text-2xl pb-8 px-12 font-medium">Oops! The page you are looking for does not exist. It might have been
-            moved or deleted.</p>
-          <button @click.prevent="kembali"
-            class="bg-gradient-to-r from-purple-400 to-blue-800 hover:from-pink-500 hover:to-orange-500 text-white font-semibold px-6 py-3 rounded-md mr-6">
-            HOME
-          </button>
+          <h1 v-if="message" class="text-6xl font-medium py-8">{{ message }}</h1>
+          <h1 v-else class="text-6xl font-medium py-8">oops! Page not found</h1>
+          <p class="text-2xl pb-8 px-12 font-medium">this page doesn’t exist. Try searching for something else.</p>
         </div>
       </div>
     </div>
@@ -18,6 +14,7 @@
 </template>
 <script>
 export default {
-  name: 'NotFound'
+  name: 'NotFound',
+  props: ['message']
 }
 </script>

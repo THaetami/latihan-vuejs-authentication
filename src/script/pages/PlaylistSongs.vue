@@ -17,7 +17,7 @@
                         <form class="overflow-auto">
                             <label for="countries_multiple" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-2">Select song</label>
                             <select @change="getSongId($event.target.value)" class="bg-gray-50 border p-2 overflow-auto border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option disabled>Please select one</option>
+                                <option>Please select one</option>
                                 <option v-for="songList in songLists" v-bind:key="songList.id" :value="songList.id">{{ songList.title }}</option>
                             </select>
                             <small v-if="message" class="text-red-500">{{ message }}</small>
@@ -107,8 +107,10 @@
                                             Active
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4">{{ song.title }}</td>
                                     <td class="px-6 py-4">
+                                        <router-link :to="{ name: 'SongPage', params: { songId: song.id } }" class="hover:underline">{{ song.title }}</router-link>
+                                    </td>
+                                        <td class="px-6 py-4">
                                         <div class="flex justify-end gap-4">
                                             <a @click="showModalDelete(song.id)" x-data="{ tooltip: 'Delete' }" href="#">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6" x-tooltip="tooltip" >
